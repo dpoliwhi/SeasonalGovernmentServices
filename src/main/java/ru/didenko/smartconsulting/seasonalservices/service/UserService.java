@@ -1,11 +1,14 @@
 package ru.didenko.smartconsulting.seasonalservices.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.didenko.smartconsulting.seasonalservices.dto.LoginDto;
 import ru.didenko.smartconsulting.seasonalservices.exceptions.ConstraintsException;
 import ru.didenko.smartconsulting.seasonalservices.model.User;
 import ru.didenko.smartconsulting.seasonalservices.repository.UserRepository;
+import ru.didenko.smartconsulting.seasonalservices.service.userDetails.CustomUserDetailsService;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -25,16 +28,18 @@ public class UserService extends GenericService<User>{
     private final RoleService roleService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserRepository repository;
+    private final CustomUserDetailsService userDetailsService;
 
     public UserService(
             UserRepository repository,
             RoleService roleService,
             BCryptPasswordEncoder bCryptPasswordEncoder,
-            UserRepository userRepository) {
+            UserRepository userRepository, CustomUserDetailsService userDetailsService) {
         super(repository);
         this.roleService = roleService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.repository = userRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -69,6 +74,15 @@ public class UserService extends GenericService<User>{
         return super.update(object);
     }
 
+    /**
+     * Method to check password from LoginDto by user login
+     */
+    public boolean checkPassword(LoginDto loginDto) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getLogin());
+        return bCryptPasswordEncoder.matches(loginDto.getPassword(), userDetails.getPassword());
+    }
+
+
     private void checkConstraintsOfNewUser(User user) throws ConstraintsException {
 //        User checkEmail = repository.findUserByEmail(user.getEmail());
 //        if (!Objects.isNull(checkEmail)) {
@@ -79,5 +93,4 @@ public class UserService extends GenericService<User>{
             throw new ConstraintsException("This login is already registered in the system");
         }
     }
-
 }

@@ -1,10 +1,13 @@
 package ru.didenko.smartconsulting.seasonalservices.dto;
 
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ServiceDtoForUser extends GenericDto {
 
     private String name;
