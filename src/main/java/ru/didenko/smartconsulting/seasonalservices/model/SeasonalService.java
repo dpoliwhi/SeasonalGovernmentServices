@@ -1,6 +1,6 @@
 package ru.didenko.smartconsulting.seasonalservices.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @SequenceGenerator(name = "default_generator", sequenceName = "service_seq", allocationSize = 1)
-public class Service extends GenericModel {
+public class SeasonalService extends GenericModel {
 
     @Column(name = "name")
     private String name;

@@ -1,6 +1,6 @@
 package ru.didenko.smartconsulting.seasonalservices.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.util.Set;
@@ -10,6 +10,7 @@ import java.util.Set;
 @Table(
         name = "users",
         uniqueConstraints = {
+                @UniqueConstraint(name = "uk_unique_login", columnNames = "login")
 //                @UniqueConstraint(name = "uk_unique_email", columnNames = "email")
         }
 )
@@ -19,6 +20,9 @@ import java.util.Set;
 @NoArgsConstructor
 @SequenceGenerator(name = "default_generator", sequenceName = "users_seq", allocationSize = 1)
 public class User extends GenericModel {
+
+    @Column(name = "login")
+    private String login;
 
     @Column(name = "email")
     private String email;

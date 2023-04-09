@@ -1,6 +1,6 @@
 package ru.didenko.smartconsulting.seasonalservices.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 @Entity
@@ -24,5 +24,8 @@ public class Application extends GenericModel {
             name = "service_id",
             foreignKey = @ForeignKey(name = "FK_SERVICE_USER")
     )
-    private Service service;
+    private SeasonalService service;
+
+    @Column(name = "is_confirmed")
+    private Boolean isConfirmed = false;
 }
