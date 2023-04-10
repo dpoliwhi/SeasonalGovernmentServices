@@ -16,6 +16,6 @@ public interface ApplicationRepository extends GenericRepository<Application> {
     List<Application> findAllByServiceId(Long serviceId);
 
     @Modifying
-    @Query(value = "update Application set isConfirmed = true where id = id")
-    void toConfirmApplication(Long id);
+    @Query(value = "update Application set isConfirmed = true where id = :applicationId")
+    void toConfirmApplication(Long applicationId);
 }

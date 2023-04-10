@@ -3,6 +3,7 @@ package ru.didenko.smartconsulting.seasonalservices.service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.didenko.smartconsulting.seasonalservices.exceptions.SpentLimitException;
 import ru.didenko.smartconsulting.seasonalservices.model.SeasonalService;
@@ -37,12 +38,12 @@ public class SeasonalServicesService extends GenericService<SeasonalService> {
         return super.update(object);
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
     public void getOneService(Long id) throws SpentLimitException {
         try {
             repository.getTheService(id);
         } catch (Exception ex) {
-            throw  new SpentLimitException("Limit of service is exhausted");
+            throw new SpentLimitException("Limit of service is exhausted");
         }
     }
 

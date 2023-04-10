@@ -1,6 +1,9 @@
 package ru.didenko.smartconsulting.seasonalservices.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.didenko.smartconsulting.seasonalservices.model.Application;
 import ru.didenko.smartconsulting.seasonalservices.repository.ApplicationRepository;
 
@@ -21,14 +24,12 @@ public class ApplicationService extends GenericService<Application> {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
     public Application create(Application object) {
         object.setCreatedWhen(LocalDateTime.now());
         object.setCreatedBy(object.getUser().getEmail());
         setDeletedAndUpdatedNull(object);
         Application result = super.create(object);
-
-        // TODO на юзера записываются заявления. Даже если отказ
-
         try {
             seasonalServicesService.getOneService(object.getService().getId());
             sendSuccessEmail(object.getUser().getEmail(), object.getService().getName(), object.getService().getDescription());

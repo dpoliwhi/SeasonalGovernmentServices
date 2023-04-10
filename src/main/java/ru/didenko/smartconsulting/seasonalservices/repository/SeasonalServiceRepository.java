@@ -9,6 +9,6 @@ import ru.didenko.smartconsulting.seasonalservices.model.SeasonalService;
 public interface SeasonalServiceRepository extends GenericRepository<SeasonalService> {
 
     @Modifying
-    @Query(value = "update SeasonalService set balance = balance - 1 where id = id")
-    void getTheService(Long id);
+    @Query(value = "update SeasonalService set balance = balance - 1 where id = :serviceId")
+    void getTheService(Long serviceId);
 }
