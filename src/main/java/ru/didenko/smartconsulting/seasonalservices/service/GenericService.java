@@ -1,5 +1,8 @@
 package ru.didenko.smartconsulting.seasonalservices.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import ru.didenko.smartconsulting.seasonalservices.model.GenericModel;
 import ru.didenko.smartconsulting.seasonalservices.repository.GenericRepository;
@@ -9,6 +12,12 @@ import java.util.List;
 
 @Service
 public abstract class GenericService<T extends GenericModel> {
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Autowired
+    private MailQueue mailQueue;
 
     private final GenericRepository<T> repository;
 
@@ -55,5 +64,14 @@ public abstract class GenericService<T extends GenericModel> {
         destination.setDeletedBy(source.getDeletedBy());
         destination.setDeletedWhen(source.getDeletedWhen());
         destination.setDeleted(source.isDeleted());
+    }
+
+    public void sendEmailMessage(String email, String message) {
+        SimpleMailMessage provider = new SimpleMailMessage();
+        provider.setTo(email);
+        provider.setSubject("Сообщение от Сервиса выдачи государственных сезонных услуг");
+        provider.setText(message);
+        mailQueue.setSender(javaMailSender);
+        mailQueue.addMail(provider);
     }
 }

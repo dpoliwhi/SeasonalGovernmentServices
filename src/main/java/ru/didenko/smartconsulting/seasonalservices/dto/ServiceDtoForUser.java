@@ -17,4 +17,6 @@ public class ServiceDtoForUser extends GenericDto {
     private LocalDate dateStart;
 
     private LocalDate dateExpiration;
+
+    // TODO удалить
 }

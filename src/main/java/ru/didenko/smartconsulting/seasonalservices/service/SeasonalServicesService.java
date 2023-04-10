@@ -2,6 +2,7 @@ package ru.didenko.smartconsulting.seasonalservices.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.didenko.smartconsulting.seasonalservices.exceptions.SpentLimitException;
 import ru.didenko.smartconsulting.seasonalservices.model.SeasonalService;
@@ -36,7 +37,7 @@ public class SeasonalServicesService extends GenericService<SeasonalService> {
         return super.update(object);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void getOneService(Long id) throws SpentLimitException {
         try {
             repository.getTheService(id);
@@ -46,4 +47,5 @@ public class SeasonalServicesService extends GenericService<SeasonalService> {
     }
 
     // TODO выдача только доступных заявок
+    // TODO выдача остатка по заявке
 }
