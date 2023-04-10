@@ -18,7 +18,5 @@ public class ServiceDtoForManager extends GenericDto {
 
     private LocalDate dateExpiration;
 
-    private Long amount;
-
     private Long balance;
 }

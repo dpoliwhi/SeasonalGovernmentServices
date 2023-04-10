@@ -1,6 +1,8 @@
 package ru.didenko.smartconsulting.seasonalservices.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+
 import lombok.*;
 
 import java.time.LocalDate;
@@ -26,9 +28,6 @@ public class SeasonalService extends GenericModel {
     @Column(name = "date_expiration")
     private LocalDate dateExpiration;
 
-    @Column(name = "amount")
-    private Long amount;
-
-    @Column(name = "balance")
+    @Column(name = "balance", columnDefinition = "bigint check (balance >= 0)")
     private Long balance;
 }

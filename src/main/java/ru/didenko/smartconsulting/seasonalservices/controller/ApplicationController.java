@@ -20,5 +20,6 @@ public class ApplicationController extends GenericController<Application, Applic
         this.mapper = mapper;
     }
 
+    // TODO выдача поданных заявлений с услугами для юзера
 
 }
