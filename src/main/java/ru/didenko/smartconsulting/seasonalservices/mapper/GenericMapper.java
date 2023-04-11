@@ -1,6 +1,5 @@
 package ru.didenko.smartconsulting.seasonalservices.mapper;
 
-
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

@@ -1,10 +1,14 @@
 package ru.didenko.smartconsulting.seasonalservices.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.Min;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import lombok.*;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Entity

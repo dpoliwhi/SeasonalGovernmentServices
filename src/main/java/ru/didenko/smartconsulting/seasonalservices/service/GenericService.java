@@ -10,6 +10,7 @@ import ru.didenko.smartconsulting.seasonalservices.repository.GenericRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**Generic class-service with main CRUD operations*/
 @Service
 public abstract class GenericService<T extends GenericModel> {
 
@@ -49,6 +50,7 @@ public abstract class GenericService<T extends GenericModel> {
         repository.deleteById(id);
     }
 
+    /**Method sets null to some information fields of GenericModel. Used for create new objects.*/
     protected void setDeletedAndUpdatedNull(T object) {
         object.setDeleted(false);
         object.setDeletedWhen(null);
@@ -57,6 +59,7 @@ public abstract class GenericService<T extends GenericModel> {
         object.setUpdatedWhen(null);
     }
 
+    /**Method moves information from exist object (source) to updated object (destination). Used for updating objects.*/
     public void setCreatedAndDeleted(Long sourceId, T destination) {
         T source = getOneById(sourceId);
         destination.setCreatedBy(source.getCreatedBy());
@@ -66,6 +69,7 @@ public abstract class GenericService<T extends GenericModel> {
         destination.setDeleted(source.isDeleted());
     }
 
+    /**Method adds new mail to concurrent queue*/
     public void sendEmailMessage(String email, String message) {
         SimpleMailMessage provider = new SimpleMailMessage();
         provider.setTo(email);

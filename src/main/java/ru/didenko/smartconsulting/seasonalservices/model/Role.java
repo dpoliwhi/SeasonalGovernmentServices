@@ -1,7 +1,8 @@
 package ru.didenko.smartconsulting.seasonalservices.model;
 
-import javax.persistence.*;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "role")

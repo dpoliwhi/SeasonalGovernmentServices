@@ -1,6 +1,7 @@
 package ru.didenko.smartconsulting.seasonalservices.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +13,8 @@ import ru.didenko.smartconsulting.seasonalservices.service.MailQueue;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rest/mail-query")
+@RequestMapping("/rest/mail-queue")
+@SecurityRequirement(name = "Bearer Authentication")
 public class MailQueueController {
 
     private final MailQueue mailQueue;

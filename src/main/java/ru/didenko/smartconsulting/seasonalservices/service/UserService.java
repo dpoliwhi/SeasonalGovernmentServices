@@ -13,6 +13,10 @@ import ru.didenko.smartconsulting.seasonalservices.service.userDetails.CustomUse
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+
+/**
+ * Class-service with main logic for User
+ */
 @Service
 public class UserService extends GenericService<User>{
 
@@ -42,6 +46,15 @@ public class UserService extends GenericService<User>{
         this.userDetailsService = userDetailsService;
     }
 
+    /**
+     * Create user
+     * <ul>
+     * <li>With creation user-object method set the CreatedBy field
+     * <li>If login is already used, method throws ConstraintsException with message
+     * <li>If email is already used, method throws ConstraintsException with message
+     * <li>Also, automatically set the Role value with USER_ROLE
+     * <li>Password is encoded with BCryptEncoder</ul>
+     */
     @Override
     public User create(User object) throws ConstraintsException {
         object.setCreatedBy(object.getLogin());
@@ -53,6 +66,14 @@ public class UserService extends GenericService<User>{
         return super.create(object);
     }
 
+    /**
+     * Create manager.<p>
+     * Only Admin can create managers so with creation the CreatedBy field set with value "ADMIN".<p>
+     * Also, automatically set the Role value with ROLE_MANAGER<p>
+     * If login is already used, method throws ConstraintsException with message<p>
+     * If email is already used, method throws ConstraintsException with message<p>
+     * Password is encoded with BCryptEncoder.
+     */
     public User createManager(User object) throws ConstraintsException {
         object.setCreatedBy("ADMIN");
         object.setCreatedWhen(LocalDateTime.now());
@@ -63,6 +84,13 @@ public class UserService extends GenericService<User>{
         return super.create(object);
     }
 
+    /**
+     * Update user.<p>
+     * With updating object method set the CreatedBy and CreatedWhen fields from existing object.<p>
+     * UpdatedBy field set with login of updated user<p>
+     * Also, automatically set the Role value from the existing user-object<p>
+     * Password is encoded with BCryptEncoder.
+     */
     @Override
     public User update(User object) throws ConstraintsException {
         setCreatedAndDeleted(object.getId(), object);
@@ -82,7 +110,12 @@ public class UserService extends GenericService<User>{
         return bCryptPasswordEncoder.matches(loginDto.getPassword(), userDetails.getPassword());
     }
 
-
+    /**
+     * Method checks constraints of creating User<p>
+     * Login and email of each user have to be unique<p><p>
+     *
+     * Checking email constraint disabled during development
+     */
     private void checkConstraintsOfNewUser(User user) throws ConstraintsException {
 //        User checkEmail = repository.findUserByEmail(user.getEmail());
 //        if (!Objects.isNull(checkEmail)) {

@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Class to convert Map of mail messages and their exceptions to Dto
+ */
 @Component
 public class ErrorMailsConverter {
 

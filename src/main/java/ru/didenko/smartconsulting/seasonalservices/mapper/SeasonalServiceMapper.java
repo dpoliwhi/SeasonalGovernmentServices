@@ -7,6 +7,7 @@ import ru.didenko.smartconsulting.seasonalservices.model.SeasonalService;
 
 @Component
 public class SeasonalServiceMapper extends GenericMapper<SeasonalService, ServiceDto> {
+
     protected SeasonalServiceMapper(ModelMapper mapper) {
         super(mapper, SeasonalService.class, ServiceDto.class);
     }

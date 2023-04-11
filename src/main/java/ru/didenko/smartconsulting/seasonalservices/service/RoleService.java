@@ -6,6 +6,9 @@ import ru.didenko.smartconsulting.seasonalservices.repository.RoleRepository;
 
 import java.util.List;
 
+/**
+ * Class-service with simple methods for Roles
+ */
 @Service
 public class RoleService {
 

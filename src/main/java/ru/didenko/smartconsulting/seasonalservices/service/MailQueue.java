@@ -12,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
+/**Class-service with mail queue logic*/
 @Log4j2
 @Service
 public class MailQueue implements Runnable {
@@ -31,6 +33,10 @@ public class MailQueue implements Runnable {
         this.sender = sender;
     }
 
+    /**
+     * Method starts the main algorithm of checking queue and sending mails from it in concurrent mode
+     * After sending all mails from main queue tries to send mails from error queue
+     */
     @Override
     public void run() {
         isRunning = true;

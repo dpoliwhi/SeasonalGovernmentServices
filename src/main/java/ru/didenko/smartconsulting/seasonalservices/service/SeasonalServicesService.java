@@ -1,6 +1,5 @@
 package ru.didenko.smartconsulting.seasonalservices.service;
 
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,7 +12,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Log4j2
+
+/**
+ * Class-service with main logic for Seasonal services
+ */
 @Service
 public class SeasonalServicesService extends GenericService<SeasonalService> {
 
@@ -24,11 +26,20 @@ public class SeasonalServicesService extends GenericService<SeasonalService> {
         this.repository = repository;
     }
 
+    /**
+     * @return List of all Services
+     */
     @Override
     public List<SeasonalService> getList() {
         return repository.findAllByOrderByDateStart();
     }
 
+    /**
+     * Method adds new Service to DB
+     *
+     * @param object - Service object
+     * @return added to DB object
+     */
     @Override
     public SeasonalService create(SeasonalService object) {
         object.setCreatedWhen(LocalDateTime.now());
@@ -37,6 +48,12 @@ public class SeasonalServicesService extends GenericService<SeasonalService> {
         return super.create(object);
     }
 
+    /**
+     * Method updates Service in DB
+     *
+     * @param object - Service object to Update
+     * @return updated in DB object
+     */
     @Override
     public SeasonalService update(SeasonalService object) {
         setCreatedAndDeleted(object.getId(), object);
@@ -45,6 +62,12 @@ public class SeasonalServicesService extends GenericService<SeasonalService> {
         return super.update(object);
     }
 
+    /**
+     * Transactional method that trying to decrease balance of one Service
+     *
+     * @param id - Service id
+     * @throws SpentLimitException after request when balance of service is 0
+     */
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
     public void getOneService(Long id) throws SpentLimitException {
         try {
@@ -54,6 +77,12 @@ public class SeasonalServicesService extends GenericService<SeasonalService> {
         }
     }
 
+    /**
+     * Method returns services if current Date is between start and expired dates of Service.
+     * Also checks balance of each service
+     *
+     * @return List of allowed at current time services
+     */
     public List<SeasonalService> getAllowedServices() {
         return repository.getAllowedServices(LocalDate.now());
     }

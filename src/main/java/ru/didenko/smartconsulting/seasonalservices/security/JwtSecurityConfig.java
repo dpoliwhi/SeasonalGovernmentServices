@@ -39,7 +39,7 @@ public class JwtSecurityConfig implements WebMvcConfigurer {
             "/css/**", "/img/**", "/js/**", "/encode/*",
 
             "/rest/user/auth", "/rest/user/create",
-            "/rest/services/list-allowed"
+            "/rest/services/list-allowed",
     };
 
     private static final String[] USER_ACCESS = {
@@ -61,7 +61,7 @@ public class JwtSecurityConfig implements WebMvcConfigurer {
             "/rest/application/get-applications-to-one-service/*"
     };
 
-    private static final String ADMIN_ACCESS = "/rest/**";
+    private static final String[] ADMIN_ACCESS = {"/rest/**"};
 
     /**
      * Main filter called for every request, checks all mappings and divide it for user roles
