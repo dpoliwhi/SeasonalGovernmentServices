@@ -37,34 +37,28 @@ public class JwtSecurityConfig implements WebMvcConfigurer {
             "/swagger-ui.html/**", "/webjars/**",
             "/v3/api-docs/**", "/swagger-ui/**",
             "/css/**", "/img/**", "/js/**", "/encode/*",
-//            "/rest/user/auth", "/rest/user/create",
 
-            "/rest/**"
+            "/rest/user/auth", "/rest/user/create",
+            "/rest/services/list-allowed"
     };
 
     private static final String[] USER_ACCESS = {
             "/rest/user/update/*", "/rest/user/get-one/*",
-            "/rest/product/products-of-user/*", "/rest/product/create", "/rest/product/update/*",
-            "/rest/product/confirmed-products-of-user/*", "/rest/product/get-one/*",
-            "/rest/market/list", "/rest/purchase/list", "/rest/shipment/list",
-            "/rest/appointment/create-appointment", "/rest/appointment/update-appointment/*",
-            "/rest/appointment/get-one/*", "/rest/appointment/get-appointments-of-user/*",
-            "/rest/appointment/delete/*"
+            "/rest/services/get-one/*",
+            "/rest/application/create-application",
+            "/rest/application/get-confirmed-applications-of-user/*",
+            "/rest/application/get-all-applications-of-user/*",
+            "/rest/application/get-one/*"
     };
 
     private static final String[] MANAGER_ACCESS = {
-            "/rest/user/add-product",
-            "/rest/user/user-products", "/rest/user/list", "/rest/user/delete/*",
-            "/rest/shipment/update/*", "/rest/shipment/delete/*", "/rest/shipment/get-one/*",
-            "/rest/purchase/update/*", "/rest/purchase/delete/*", "/rest/purchase/get-one/*",
-            "/rest/market/update/*", "/rest/purchase/get-one/*",
-            "/rest/product/confirm-product/*", "/rest/product/delete/*", "/rest/product/list",
-            "/rest/appointment/list", "/rest/appointment/to-perform-appointment/*",
-            "/rest/appointment/to-pay-appointment/*", "/rest/appointment/unpaid-appointments",
-            "/rest/appointment/unperformed-appointments",
-            "/rest/appointment/export-purchases/*", "/rest/appointment/export-purchases-email/*",
-            "/rest/appointment/export-shipments/*", "/rest/appointment/export-shipments-email/*",
-            "/rest/appointment/export-packaging/*", "/rest/appointment/export-packaging-email/*"
+            "/rest/user/user-applications", "/rest/user/list", "/rest/user/delete/*",
+            "/rest/services/create", "/rest/services/update/*",
+            "/rest/services/list", "/rest/services/delete/*",
+            "/rest/application/list",
+            "/rest/application/get-not-confirmed-applications",
+            "/rest/application/get-all-confirmed-applications",
+            "/rest/application/get-applications-to-one-service/*"
     };
 
     private static final String ADMIN_ACCESS = "/rest/**";
@@ -90,10 +84,10 @@ public class JwtSecurityConfig implements WebMvcConfigurer {
                                 HttpServletResponse.SC_UNAUTHORIZED,
                                 ex.getMessage()
                         ))
-//                .and().authorizeRequests()
-//                .antMatchers(USER_ACCESS).hasAnyRole("USER", "MANAGER", "ADMIN")
-//                .antMatchers(MANAGER_ACCESS).hasAnyRole("MANAGER", "ADMIN")
-//                .antMatchers(ADMIN_ACCESS).hasRole("ADMIN")
+                .and().authorizeRequests()
+                .antMatchers(USER_ACCESS).hasAnyRole("USER", "MANAGER", "ADMIN")
+                .antMatchers(MANAGER_ACCESS).hasAnyRole("MANAGER", "ADMIN")
+                .antMatchers(ADMIN_ACCESS).hasRole("ADMIN")
                 .and()
                 //JWT Token VALID or NOT
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
