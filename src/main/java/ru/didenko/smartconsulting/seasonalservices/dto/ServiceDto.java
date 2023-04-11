@@ -1,6 +1,9 @@
 package ru.didenko.smartconsulting.seasonalservices.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -8,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceDtoForUser extends GenericDto {
+public class ServiceDto extends GenericDto {
 
     private String name;
 
@@ -18,5 +21,5 @@ public class ServiceDtoForUser extends GenericDto {
 
     private LocalDate dateExpiration;
 
-    // TODO удалить
+    private Long balance;
 }

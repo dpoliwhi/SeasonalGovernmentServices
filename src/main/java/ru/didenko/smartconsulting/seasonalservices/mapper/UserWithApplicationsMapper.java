@@ -16,33 +16,30 @@ import java.util.stream.Collectors;
 public class UserWithApplicationsMapper extends GenericMapper<User, UserWithApplicationsDto> {
 
     private final ApplicationRepository applicationRepository;
+    private final ApplicationResponseMapper applicationResponseMapper;
 
-    protected UserWithApplicationsMapper(ModelMapper mapper, ApplicationRepository applicationRepository) {
+    protected UserWithApplicationsMapper(ModelMapper mapper, ApplicationRepository applicationRepository, ApplicationResponseMapper applicationResponseMapper) {
         super(mapper, User.class, UserWithApplicationsDto.class);
         this.applicationRepository = applicationRepository;
+        this.applicationResponseMapper = applicationResponseMapper;
     }
-
 
     @PostConstruct
     public void setupMapper() {
         super.mapper.createTypeMap(User.class, UserWithApplicationsDto.class)
-                .addMappings(m -> m.skip(UserWithApplicationsDto::setApplicationsId)).setPostConverter(toDtoConverter());
-        super.mapper.createTypeMap(UserWithApplicationsDto.class, User.class)
-                .addMappings(m -> m.skip(User::setApplications)).setPostConverter(toEntityConverter());
-    }
-
-    @Override
-    void mapSpecificFields(UserWithApplicationsDto source, User destination) {
-        if (!Objects.isNull(source.getApplicationsId())) {
-            destination.setApplications(applicationRepository.findAllByIdIn(source.getApplicationsId()));
-        } else {
-            destination.setApplications(null);
-        }
+                .addMappings(m -> m.skip(UserWithApplicationsDto::setApplicationsId)).setPostConverter(toDtoConverter())
+                .addMappings(m -> m.skip(UserWithApplicationsDto::setApplications)).setPostConverter(toDtoConverter());
     }
 
     @Override
     void mapSpecificFields(User source, UserWithApplicationsDto destination) {
         destination.setApplicationsId(getIds(source));
+        destination.setApplications(
+                applicationResponseMapper.toDtos(
+                        applicationRepository
+                                .findAllByIdIn(destination.getApplicationsId())
+                                .stream().toList())
+        );
     }
 
     private Set<Long> getIds(User user) {

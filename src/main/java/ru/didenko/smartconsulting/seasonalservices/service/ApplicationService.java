@@ -5,11 +5,13 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.didenko.smartconsulting.seasonalservices.exceptions.ApplicationFailException;
+import ru.didenko.smartconsulting.seasonalservices.exceptions.IncorrectIdException;
 import ru.didenko.smartconsulting.seasonalservices.model.Application;
 import ru.didenko.smartconsulting.seasonalservices.repository.ApplicationRepository;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -17,14 +19,16 @@ import java.util.Objects;
 public class ApplicationService extends GenericService<Application> {
 
     private final SeasonalServicesService seasonalServicesService;
+    private final UserService userService;
     private final ApplicationRepository repository;
 
     public ApplicationService(
             ApplicationRepository repository,
-            SeasonalServicesService servicesService) {
+            SeasonalServicesService servicesService, UserService userService) {
         super(repository);
         this.seasonalServicesService = servicesService;
         this.repository = repository;
+        this.userService = userService;
     }
 
     @Override
@@ -93,5 +97,23 @@ public class ApplicationService extends GenericService<Application> {
         response.put("Name of service", application.getService().getName());
         response.put("Description of service", application.getService().getDescription());
         return response;
+    }
+
+    public List<Application> getAllApplicationsOfUser(Long userId) {
+        try {
+            userService.getOneById(userId);
+        } catch (Exception ex) {
+            throw new IncorrectIdException("No such user with id " + userId + " exists");
+        }
+        return repository.getAllByUserId(userId);
+    }
+
+    public List<Application> getConfirmedApplicationsOfUser(Long userId) {
+        try {
+            userService.getOneById(userId);
+        } catch (Exception ex) {
+            throw new IncorrectIdException("No such user with id " + userId + " exists");
+        }
+        return repository.getConfirmedByUserId(userId);
     }
 }

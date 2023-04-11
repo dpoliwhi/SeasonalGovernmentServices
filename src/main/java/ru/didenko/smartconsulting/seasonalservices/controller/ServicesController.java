@@ -6,26 +6,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.didenko.smartconsulting.seasonalservices.dto.ServiceDtoForManager;
-import ru.didenko.smartconsulting.seasonalservices.mapper.SeasonalServiceForManagerMapper;
-import ru.didenko.smartconsulting.seasonalservices.mapper.SeasonalServiceForUserMapper;
+import ru.didenko.smartconsulting.seasonalservices.dto.ServiceDto;
+import ru.didenko.smartconsulting.seasonalservices.mapper.SeasonalServiceMapper;
 import ru.didenko.smartconsulting.seasonalservices.model.SeasonalService;
 import ru.didenko.smartconsulting.seasonalservices.service.SeasonalServicesService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/rest/services")
-public class ServicesController extends GenericController<SeasonalService, ServiceDtoForManager> {
+public class ServicesController extends GenericController<SeasonalService, ServiceDto> {
 
     private final SeasonalServicesService service;
-    private final SeasonalServiceForManagerMapper managerMapper;
-    private final SeasonalServiceForUserMapper userMapper;
+    private final SeasonalServiceMapper mapper;
 
-
-    public ServicesController(SeasonalServicesService service, SeasonalServiceForManagerMapper managerMapper, SeasonalServiceForUserMapper userMapper) {
-        super(service, managerMapper);
+    public ServicesController(SeasonalServicesService service, SeasonalServiceMapper mapper) {
+        super(service, mapper);
         this.service = service;
-        this.managerMapper = managerMapper;
-        this.userMapper = userMapper;
+        this.mapper = mapper;
     }
 
     @ResponseBody
@@ -34,8 +32,21 @@ public class ServicesController extends GenericController<SeasonalService, Servi
             description = "Получить список доступных услуг",
             method = "GetAllowedServices")
     public ResponseEntity<?> getAllowedServices() {
-        return ResponseEntity.ok().body(userMapper.toDtos(service.getList()));
+        return ResponseEntity.ok().body(mapper.toDtos(service.getAllowedServices()));
     }
 
-    // TODO сделать один маппер  и одну дто
+
+
+    public ResponseEntity<?> getList() {
+        return ResponseEntity.ok().body(mapper.toDtos(service.getAllowedServices()));
+    }
+
+    @Override
+    @GetMapping("/list")
+    @Operation(
+            description = "Получить список всех услуг, отсортированных по дате старта подачи заявок",
+            method = "GetAll")
+    public ResponseEntity<List<ServiceDto>> getAll() {
+        return super.getAll();
+    }
 }

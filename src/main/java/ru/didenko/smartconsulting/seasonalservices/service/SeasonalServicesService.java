@@ -9,7 +9,9 @@ import ru.didenko.smartconsulting.seasonalservices.exceptions.SpentLimitExceptio
 import ru.didenko.smartconsulting.seasonalservices.model.SeasonalService;
 import ru.didenko.smartconsulting.seasonalservices.repository.SeasonalServiceRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Log4j2
 @Service
@@ -20,6 +22,11 @@ public class SeasonalServicesService extends GenericService<SeasonalService> {
     public SeasonalServicesService(SeasonalServiceRepository repository) {
         super(repository);
         this.repository = repository;
+    }
+
+    @Override
+    public List<SeasonalService> getList() {
+        return repository.findAllByOrderByDateStart();
     }
 
     @Override
@@ -47,6 +54,7 @@ public class SeasonalServicesService extends GenericService<SeasonalService> {
         }
     }
 
-    // TODO выдача только доступных заявок
-    // TODO выдача остатка по заявке
+    public List<SeasonalService> getAllowedServices() {
+        return repository.getAllowedServices(LocalDate.now());
+    }
 }

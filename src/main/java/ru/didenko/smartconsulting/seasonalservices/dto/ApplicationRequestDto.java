@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationDto extends GenericDto {
+public class ApplicationRequestDto extends GenericDto {
 
     private String login;
 

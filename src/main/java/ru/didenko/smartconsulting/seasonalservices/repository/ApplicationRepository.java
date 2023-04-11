@@ -11,8 +11,14 @@ public interface ApplicationRepository extends GenericRepository<Application> {
 
     Set<Application> findAllByIdIn(Set<Long> ids);
 
-    List<Application> findAllByUserId(Long userId);
+    @Query(value = "select a FROM Application a where a.user.id = :userId order by a.createdWhen")
+    List<Application> getAllByUserId(Long userId);
 
+    @Query(value = "select a FROM Application a where a.user.id = :userId and a.isConfirmed = true order by a.createdWhen")
+    List<Application> getConfirmedByUserId(Long userId);
+
+
+    // TODO удалить
     List<Application> findAllByServiceId(Long serviceId);
 
     @Modifying
