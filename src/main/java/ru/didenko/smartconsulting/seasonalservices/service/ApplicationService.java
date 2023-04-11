@@ -4,10 +4,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.didenko.smartconsulting.seasonalservices.exceptions.ApplicationFailException;
 import ru.didenko.smartconsulting.seasonalservices.model.Application;
 import ru.didenko.smartconsulting.seasonalservices.repository.ApplicationRepository;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class ApplicationService extends GenericService<Application> {
@@ -25,9 +29,10 @@ public class ApplicationService extends GenericService<Application> {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED, propagation = Propagation.REQUIRES_NEW)
-    public Application create(Application object) {
+    public Application create(Application object) throws ApplicationFailException {
         object.setCreatedWhen(LocalDateTime.now());
-        object.setCreatedBy(object.getUser().getEmail());
+        checkUserAndService(object);
+        object.setCreatedBy(object.getUser().getLogin());
         setDeletedAndUpdatedNull(object);
         Application result = super.create(object);
         try {
@@ -38,6 +43,20 @@ public class ApplicationService extends GenericService<Application> {
             sendFailEmail(object.getUser().getEmail(), object.getService().getName());
         }
         return result;
+    }
+
+    void checkUserAndService(Application application) throws ApplicationFailException {
+        if (Objects.isNull(application.getService())) {
+            throw new ApplicationFailException("This seasonal service not found");
+        }
+        if (Objects.isNull(application.getUser())) {
+            throw new ApplicationFailException("User not found");
+        }
+        if (application.getCreatedWhen().isAfter(application.getService().getDateExpiration().atStartOfDay()) ||
+                application.getCreatedWhen().isBefore(application.getService().getDateStart().atStartOfDay())) {
+            throw new ApplicationFailException("This service is not available due to dates");
+        }
+
     }
 
     private void sendSuccessEmail(String email, String serviceName, String serviceDescription) {
@@ -59,8 +78,20 @@ public class ApplicationService extends GenericService<Application> {
     @Override
     public Application update(Application object) {
         setCreatedAndDeleted(object.getId(), object);
-        object.setUpdatedBy("Manager");
+        object.setUpdatedBy("Admin");
         object.setUpdatedWhen(LocalDateTime.now());
         return super.update(object);
+    }
+
+
+    /**
+     * Method creates Info Messages for response with information about application and service
+     */
+    public Map<String, Object> infoResponse(Application application) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("Id", application.getId());
+        response.put("Name of service", application.getService().getName());
+        response.put("Description of service", application.getService().getDescription());
+        return response;
     }
 }

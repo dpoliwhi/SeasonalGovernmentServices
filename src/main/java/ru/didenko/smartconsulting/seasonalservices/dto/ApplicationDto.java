@@ -12,6 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApplicationDto extends GenericDto {
 
+    private String login;
+
     private String firstName;
 
     private String lastName;

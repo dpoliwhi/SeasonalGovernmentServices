@@ -17,7 +17,7 @@ public class ApplicationMapper extends GenericMapper<Application, ApplicationDto
     private final UserRepository userRepository;
     private final SeasonalServiceRepository seasonalServiceRepository;
 
-    public ApplicationMapper(ModelMapper mapper, UserRepository userRepository, SeasonalServicesService seasonalServicesService,
+    public ApplicationMapper(ModelMapper mapper, UserRepository userRepository,
                              SeasonalServiceRepository seasonalServiceRepository) {
         super(mapper, Application.class, ApplicationDto.class);
         this.userRepository = userRepository;
@@ -28,6 +28,7 @@ public class ApplicationMapper extends GenericMapper<Application, ApplicationDto
     public void setupMapper() {
         super.mapper.createTypeMap(Application.class, ApplicationDto.class)
                 .addMappings(m -> m.skip(ApplicationDto::setSeasonalServiceId)).setPostConverter(toDtoConverter())
+                .addMappings(m -> m.skip(ApplicationDto::setLogin)).setPostConverter(toDtoConverter())
                 .addMappings(m -> m.skip(ApplicationDto::setLastName)).setPostConverter(toDtoConverter())
                 .addMappings(m -> m.skip(ApplicationDto::setFirstName)).setPostConverter(toDtoConverter())
                 .addMappings(m -> m.skip(ApplicationDto::setMidlName)).setPostConverter(toDtoConverter())
@@ -40,11 +41,12 @@ public class ApplicationMapper extends GenericMapper<Application, ApplicationDto
     @Override
     void mapSpecificFields(ApplicationDto source, Application destination) {
         destination.setService(seasonalServiceRepository.findById(source.getSeasonalServiceId()).orElse(null));
-        destination.setUser(userRepository.findUserByEmail(source.getEmail()));
+        destination.setUser(userRepository.findUserByLogin(source.getLogin()));
     }
 
     @Override
     void mapSpecificFields(Application source, ApplicationDto destination) {
+        destination.setLogin(source.getUser().getLogin());
         destination.setLastName(source.getUser().getLastName());
         destination.setFirstName(source.getUser().getFirstName());
         destination.setMidlName(source.getUser().getMidlName());

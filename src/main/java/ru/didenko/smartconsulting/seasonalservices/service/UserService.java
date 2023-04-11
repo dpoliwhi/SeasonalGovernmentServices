@@ -44,7 +44,7 @@ public class UserService extends GenericService<User>{
 
     @Override
     public User create(User object) throws ConstraintsException {
-        object.setCreatedBy(object.getLastName());
+        object.setCreatedBy(object.getLogin());
         object.setRole(roleService.getOneById(USER_ID));
         object.setCreatedWhen(LocalDateTime.now());
         setDeletedAndUpdatedNull(object);
@@ -66,7 +66,7 @@ public class UserService extends GenericService<User>{
     @Override
     public User update(User object) throws ConstraintsException {
         setCreatedAndDeleted(object.getId(), object);
-        object.setUpdatedBy(object.getLastName());
+        object.setUpdatedBy(object.getLogin());
         object.setUpdatedWhen(LocalDateTime.now());
         User user = getOneById(object.getId());
         object.setPassword(bCryptPasswordEncoder.encode(object.getPassword()));

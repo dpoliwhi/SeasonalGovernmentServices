@@ -84,7 +84,6 @@ public class UserController extends GenericController<User, UserDto> {
     @PutMapping("/update/{id}")
     @Operation(description = "Обновить пользователя по id", method = "Update")
     public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody UserDto object) {
-//        if (service.checkAccessForUser(id)) {
         try {
             object.setId(id);
             return ResponseEntity.ok().body(mapper.toDto(service.update(mapper.toEntity(object))));
@@ -93,9 +92,6 @@ public class UserController extends GenericController<User, UserDto> {
         } catch (Exception e) {
             throw new IncorrectIdException("No such user with id " + id + " exists!");
         }
-//        } else {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
     }
 
     @Override
@@ -103,15 +99,11 @@ public class UserController extends GenericController<User, UserDto> {
     @GetMapping("/get-one/{id}")
     @Operation(description = "Получить данные пользователя по id", method = "GetById")
     public ResponseEntity<?> getById(@PathVariable Long id) {
-//        if (service.checkAccessForUser(id)) {
         try {
             return ResponseEntity.ok().body(mapper.toDto(service.getOneById(id)));
         } catch (Exception e) {
             throw new IncorrectIdException("No such user with id " + id + " exists!");
         }
-//        } else {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
     }
 
     @ResponseBody

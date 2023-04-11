@@ -36,17 +36,6 @@ public class ServicesController extends GenericController<SeasonalService, Servi
     public ResponseEntity<?> getAllowedServices() {
         return ResponseEntity.ok().body(userMapper.toDtos(service.getList()));
     }
-//
-//    @ResponseBody
-//    @PutMapping("/get-one-service/{id}")
-//    @Operation(description = "Получить одну услугу по id", method = "GetTheService")
-//    public ResponseEntity<?> getTheService(@PathVariable Long id) {
-//        try {
-//            service.getOneService(id);
-//            return ResponseEntity.ok().body(HttpStatus.OK);
-//        } catch (Exception ex) {
-//            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
-//        }
-//
-//    }
+
+    // TODO сделать один маппер  и одну дто
 }
