@@ -60,4 +60,28 @@ public class ApplicationController extends GenericController<Application, Applic
     public ResponseEntity<List<ApplicationResponseDto>> getConfirmedApplicationsOfUser(@PathVariable Long id) {
         return ResponseEntity.ok().body(responseMapper.toDtos(service.getConfirmedApplicationsOfUser(id)));
     }
+
+    @GetMapping("/get-all-confirmed-applications")
+    @Operation(
+            description = "Получить список всех одобренных заявлений, отсортированных по дате подачи заявки",
+            method = "GetConfirmedApplications")
+    public ResponseEntity<List<ApplicationResponseDto>> getConfirmedApplication() {
+        return ResponseEntity.ok().body(responseMapper.toDtos(service.getConfirmedApplications()));
+    }
+
+    @GetMapping("/get-not-confirmed-applications")
+    @Operation(
+            description = "Получить список всех заявлений c отказом, отсортированных по дате подачи заявки",
+            method = "GetNotConfirmedApplication")
+    public ResponseEntity<List<ApplicationResponseDto>> getNotConfirmedApplication() {
+        return ResponseEntity.ok().body(responseMapper.toDtos(service.getNotConfirmedApplications()));
+    }
+
+    @GetMapping("/get-applications-to-one-service/{id}")
+    @Operation(
+            description = "Получить список заявлений по одной услуге, отсортированных по дате подачи заявки и по статусу одобрения",
+            method = "GetApplicationsToOneService")
+    public ResponseEntity<List<ApplicationResponseDto>> getApplicationsToOneService(@PathVariable Long id) {
+        return ResponseEntity.ok().body(responseMapper.toDtos(service.getApplicationsToOneService(id)));
+    }
 }

@@ -17,8 +17,9 @@ public interface ApplicationRepository extends GenericRepository<Application> {
     @Query(value = "select a FROM Application a where a.user.id = :userId and a.isConfirmed = true order by a.createdWhen")
     List<Application> getConfirmedByUserId(Long userId);
 
+    List<Application> getAllByIsConfirmedOrderByCreatedWhen(Boolean isConfirmed);
 
-    // TODO удалить
+    @Query(value = "select a FROM Application a where a.service.id = :serviceId order by a.isConfirmed, a.createdWhen")
     List<Application> findAllByServiceId(Long serviceId);
 
     @Modifying

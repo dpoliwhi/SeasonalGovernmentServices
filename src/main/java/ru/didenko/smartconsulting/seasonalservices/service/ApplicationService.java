@@ -116,4 +116,21 @@ public class ApplicationService extends GenericService<Application> {
         }
         return repository.getConfirmedByUserId(userId);
     }
+
+    public List<Application> getConfirmedApplications() {
+        return repository.getAllByIsConfirmedOrderByCreatedWhen(true);
+    }
+
+    public List<Application> getNotConfirmedApplications() {
+        return repository.getAllByIsConfirmedOrderByCreatedWhen(false);
+    }
+
+    public List<Application> getApplicationsToOneService(Long serviceId) {
+        try {
+            seasonalServicesService.getOneById(serviceId);
+        } catch (Exception ex) {
+            throw new IncorrectIdException("No such service with id " + serviceId + " exists");
+        }
+        return repository.findAllByServiceId(serviceId);
+    }
 }

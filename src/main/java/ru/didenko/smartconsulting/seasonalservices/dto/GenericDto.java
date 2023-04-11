@@ -1,8 +1,11 @@
 package ru.didenko.smartconsulting.seasonalservices.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class GenericDto {
 
     private Long id;
