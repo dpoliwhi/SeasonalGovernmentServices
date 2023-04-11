@@ -44,7 +44,8 @@ public class MailQueue implements Runnable {
         while (isRunning) {
             while (mailsToSend.peek() != null) {
                 int currentThreads = CURRENT_THREADS_SEND_MAIL.get();
-                if (currentThreads < MAX_THREADS_SEND_MAIL && mailsToSend.size() > (MAX_ELEMENTS_BEFORE_NEW_THREAD * currentThreads)) {
+                if (currentThreads < MAX_THREADS_SEND_MAIL && mailsToSend.size()
+                        > (MAX_ELEMENTS_BEFORE_NEW_THREAD * currentThreads)) {
                     new Thread(this).start();
                 }
                 SimpleMailMessage message = mailsToSend.remove();
